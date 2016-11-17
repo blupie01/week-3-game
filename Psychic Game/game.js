@@ -5,10 +5,9 @@ var alphabet = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l',
 var wins = 0;
 var losses = 0;
 var guesses = 10;
-var lettersGuessed = [];
+var lettersGuessed = '';
 var display = document.querySelector('#displayResults');
 
-var computerChoice = alphabet[Math.floor(Math.random()*alphabet.length)];
 
 function displayResults(whoWon, currentChoice, computerChoice, guesses) {
 	var string = '<p>' + whoWon + '</p>';
@@ -22,26 +21,35 @@ function displayResults(whoWon, currentChoice, computerChoice, guesses) {
 	display.innerHTML = string;
 }
 
-function
+// function
+function startGame() {
+		guesses = 10;
+		lettersGuessed = '';
+		var computerChoice = alphabet[Math.floor(Math.random()*alphabet.length)];
+}
 
 document.onkeyup = function(event) {
 	var key = event.key;
-	// var computerChoice = alphabet[Math.floor(Math.random()*alphabet.length)];
 
-
-	if (lettersGuessed.length < 11) {
-		lettersGuessed.push(key);
+	if (guesses != 0) {
+		lettersGuessed += key + ', ';
 		if (key == computerChoice) {
 			wins++;
 			displayResults('You Win!', key, computerChoice, guesses);
+
+			startGame();
 		}
 		else if (key != computerChoice) {
 			guesses--;
 			displayResults('Keep Guessing!', key, 'Not Telling!' , guesses);
+			console.log(computerChoice);
+
+			startGame();
 		}
 	}
 	else {
 		losses++;
 		displayResults('You Lose!', key, computerChoice, guesses);
+		console.log(computerChoice);
 	}
 }
