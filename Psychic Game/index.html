@@ -7,8 +7,81 @@
 <body>
 	<h1>Guess what letter I'm thinking of</h1>
 	<div id="displayResults">
-	Press any key to begin
+	Press any key to begin. You have 10 guesses.
 	</div>
-	<script type="text/javascript" src="game.js"></script>
+
+	<script type="text/javascript">
+		var alphabet = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l',
+						'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u','v','w',
+						'x', 'y', 'z']
+
+		var wins = 0;
+		var losses = 0;
+		var guesses = 10;
+		var lettersGuessed = '';
+		var display = document.querySelector('#displayResults');
+		var computerChoice = '';
+
+		function displayResults(currentChoice, computerChoice, guesses) {
+			var string = '<p>Your Most Recent Guess: ' + currentChoice + '</p>';
+			string += '<p>Computers Guess: ' + computerChoice + '</p>';
+			string += '<p>Wins: ' + wins; + '</p>';
+			string += '<p>Losses: ' + losses; + '</p>';
+			string += '<p>Your Guesses: ' + lettersGuessed; + '</p>';
+			string += '<p>Remaining Guesses: ' + guesses; + '</p>';
+
+			display.innerHTML = string;
+		}
+
+		function startGame() {
+				guesses = 10;
+				lettersGuessed = '';
+				computerChoice = alphabet[Math.floor(Math.random()*alphabet.length)];
+				return computerChoice;
+		}
+
+		startGame();
+
+		document.onkeyup = function(event) {
+			//ctrl+r to refresh page, but also to set lettersGuessed by player to ''.
+			//the 'r' was being recorded as a guess.
+			if (event.keyCode == 82 && event.ctrlKey) {
+				startGame();
+			}
+			//allows only A-Z on keyboard to be registered as answers
+			else if (event.keyCode >= 65 && event.keyCode <= 90) {
+
+				var key = event.key;
+				console.log(computerChoice);
+				if (guesses != 0) {
+					lettersGuessed += key + ' ';
+					if (key == computerChoice) {
+						wins++;
+						display.innerHTML = "You WIN! The computer chose " + computerChoice +
+											"<br/> To play again press any button.";
+						startGame();
+					}
+					else if (key != computerChoice && guesses != 0) {
+						guesses--;
+						displayResults(key, 'Not Telling!' , guesses);
+					}
+				}
+				else if (guesses == 0) {
+					losses++;
+					display.innerHTML = "You LOSE! The computer chose: " + computerChoice +
+										"<br/> To play again press any button.";
+					startGame();
+				}
+			}
+			else if (event.keyCode == 17) {
+				event.preventDefault();
+				event.stopPropagation();
+			}
+			else {
+				alert("Only A-Z allowed.");
+			}
+		}
+		
+	</script>
 </body>
 </html>
